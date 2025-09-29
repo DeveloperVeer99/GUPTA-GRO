@@ -1,0 +1,1924 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Fresh and organic grocery products delivered to your doorstep. Shop premium quality fruits, vegetables and more."
+    />
+    <meta
+      name="keywords"
+      content="grocery, organic food, fresh vegetables, fruits, delivery"
+    />
+    <meta name="author" content="Veer Gupta" />
+    <meta name="theme-color" content="#ff9800" />
+    <title>GUPTAGRO | Fresh & Organic Grocery Shop</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.ico" />
+
+    <!-- Preconnect for faster font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="preconnect" href="https://unpkg.com" crossorigin />
+
+    <!-- Critical CSS -->
+    <style>
+      /* Inline critical CSS for faster rendering */
+      :root {
+        --primary-color: #ff9800;
+        --white: #fff;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+      }
+      .loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.3s ease;
+      }
+      .loader {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .navbar {
+        height: 80px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 4rem;
+        background-color: rgba(255, 255, 255, 0.98);
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="cart.css" />
+    <link rel="stylesheet" href="search.css" />
+    <link rel="stylesheet" href="footer.css" />
+
+    <!-- Defer non-critical CSS -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      media="print"
+      onload="this.media='all'"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/aos@next/dist/aos.css"
+      media="print"
+      onload="this.media='all'"
+    />
+
+    <!-- Fallback for CSS -->
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      />
+      <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    </noscript>
+  </head>
+  <body>
+    <div class="scroll-progress"></div>
+    <div class="loading">
+      <div class="loader"></div>
+    </div>
+    <!-- Search Overlay -->
+    <div class="search-overlay">
+      <div class="search-container">
+        <div class="search-header">
+          <h2>Search Products</h2>
+          <button class="close-search" aria-label="Close search">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="search-form">
+          <div class="search-input-wrapper">
+            <input
+              type="search"
+              id="searchInput"
+              placeholder="Search for products..."
+              aria-label="Search for products"
+            />
+            <button class="clear-search" aria-label="Clear search">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="search-filters">
+            <select id="categoryFilter" aria-label="Filter by category">
+              <option value="">All Categories</option>
+              <option value="vegetables">Vegetables</option>
+              <option value="fruits">Fruits</option>
+              <option value="meat">Meat & Poultry</option>
+              <option value="dairy">Dairy</option>
+            </select>
+            <select id="sortFilter" aria-label="Sort by">
+              <option value="relevance">Relevance</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="name">Name: A to Z</option>
+            </select>
+          </div>
+        </div>
+        <div class="search-results">
+          <!-- Results will be dynamically added here -->
+        </div>
+        <div class="search-no-results" style="display: none">
+          <img src="assets/not-found.png" alt="No results found" width="200" />
+          <p>No products found matching your search.</p>
+          <button class="clear-filters-btn">Clear Filters</button>
+        </div>
+      </div>
+    </div>
+    <!-- Shopping Cart Overlay -->
+    <div class="cart-overlay">
+      <div class="cart-container">
+        <div class="cart-header">
+          <h2>Shopping Cart</h2>
+          <button class="close-cart" aria-label="Close cart">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="cart-items">
+          <!-- Cart items will be dynamically added here -->
+        </div>
+        <div class="cart-footer">
+          <div class="cart-total">
+            <span>Total:</span>
+            <span class="total-amount">$0.00</span>
+          </div>
+          <button class="checkout-btn btn btn-primary">
+            Proceed to Checkout <i class="fas fa-arrow-right"></i>
+          </button>
+          <button class="clear-cart-btn btn btn-outline">
+            Clear Cart <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="main">
+      <header class="navbar">
+        <div class="logo">
+          <a href="#" aria-label="GUPTAGRO Home">
+            <img
+              src="assets/Capture.PNG"
+              alt="GUPTAGRO Logo"
+              width="130"
+              height="40"
+            />
+          </a>
+        </div>
+        <div class="menu-btn" aria-label="Toggle menu">
+          <i class="fas fa-bars"></i>
+        </div>
+        <nav class="menuitems" aria-label="Main navigation">
+          <ul>
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#products">Products</a></li>
+            <li><a href="#categories">Categories</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="#blogs">Blogs</a></li>
+          </ul>
+        </nav>
+        <div class="sideicons">
+          <button class="icon-btn" aria-label="Shopping cart">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count">0</span>
+          </button>
+          <button
+            class="icon-btn search-trigger"
+            aria-label="Search"
+            id="searchTrigger"
+            onclick="openSearch()"
+          >
+            <i class="fas fa-search"></i>
+          </button>
+          <button class="icon-btn" aria-label="User account">
+            <i class="fas fa-user"></i>
+          </button>
+        </div>
+      </header>
+      <section id="home" class="hero">
+        <div class="hero-content">
+          <span class="hero-badge" data-aos="fade-down" data-aos-delay="50"
+            >100% Organic & Fresh</span
+          >
+          <h1 data-aos="fade-down" data-aos-delay="100">
+            Fresh And <span class="highlight">Organic</span> Products For Your
+            Family
+          </h1>
+          <p data-aos="fade-up" data-aos-delay="150">
+            Discover premium quality groceries directly from farms to your
+            table. Healthy, sustainable and ethically sourced products at
+            affordable prices.
+          </p>
+          <div class="hero-btns" data-aos="fade-up" data-aos-delay="200">
+            <a href="#products" class="btn btn-primary"
+              >Shop Now <i class="fas fa-arrow-right"></i
+            ></a>
+            <a href="#features" class="btn btn-outline">Learn More</a>
+          </div>
+          <div class="hero-trust" data-aos="fade-up" data-aos-delay="250">
+            <div class="trust-badge">
+              <i class="fas fa-truck"></i>
+              <span>Free Shipping</span>
+            </div>
+            <div class="trust-badge">
+              <i class="fas fa-award"></i>
+              <span>Certified Organic</span>
+            </div>
+            <div class="trust-badge">
+              <i class="fas fa-shield-alt"></i>
+              <span>Quality Guarantee</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-image" data-aos="zoom-in" data-aos-delay="150">
+          <img
+            src="assets/Capture.PNG"
+            alt="Organic fruits and vegetables"
+            class="floating"
+            width="450"
+            height="auto"
+            loading="eager"
+            fetchpriority="high"
+          />
+          <div class="hero-discount-tag">
+            <span class="discount-text">20%</span>
+            <span class="discount-text">OFF</span>
+            <span class="discount-subtext">First Order</span>
+          </div>
+        </div>
+        <div class="hero-shapes">
+          <div class="shape shape-1"></div>
+          <div class="shape shape-2"></div>
+          <div class="shape shape-3"></div>
+          <div class="shape shape-4"></div>
+        </div>
+      </section>
+      <section id="features" class="features">
+        <div class="section-heading" data-aos="fade-up">
+          <span class="subheading">Why Choose Us</span>
+          <h2>Our <span class="features-badge">Features</span></h2>
+          <p class="section-desc">
+            We provide the best shopping experience with premium quality
+            products
+          </p>
+        </div>
+
+        <div class="features-container">
+          <div class="feature-box" data-aos="fade-up" data-aos-delay="0">
+            <span class="feature-number">01</span>
+            <div class="feature-icon-wrapper">
+              <img
+                src="assets/feature-img-1.png"
+                alt="Fresh And Organic"
+                loading="lazy"
+                width="80"
+                height="80"
+                decoding="async"
+              />
+            </div>
+            <h3>Fresh And Organic</h3>
+            <p>
+              100% organic produce sourced directly from certified farms at
+              affordable prices. All products meet strict quality standards.
+            </p>
+            <div class="feature-meta">
+              <span class="feature-tag">Farm Fresh</span>
+              <span class="feature-tag">Certified</span>
+            </div>
+            <a href="#" class="feature-link">
+              Read More
+              <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+
+          <div class="feature-box" data-aos="fade-up" data-aos-delay="100">
+            <span class="feature-number">02</span>
+            <div class="feature-icon-wrapper">
+              <img
+                src="assets/feature-img-2.png"
+                alt="Free Delivery"
+                loading="lazy"
+                width="80"
+                height="80"
+                decoding="async"
+              />
+            </div>
+            <h3>Free Delivery</h3>
+            <p>
+              Fast and reliable delivery service with real-time tracking on all
+              orders above $30. Same-day delivery available in select areas.
+            </p>
+            <div class="feature-meta">
+              <span class="feature-tag">Free Shipping</span>
+              <span class="feature-tag">Fast</span>
+            </div>
+            <a href="#" class="feature-link">
+              Read More
+              <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+
+          <div class="feature-box" data-aos="fade-up" data-aos-delay="200">
+            <span class="feature-number">03</span>
+            <div class="feature-icon-wrapper">
+              <img
+                src="assets/feature-img-3.png"
+                alt="Secure Payments"
+                loading="lazy"
+                width="80"
+                height="80"
+                decoding="async"
+              />
+            </div>
+            <h3>Secure Payments</h3>
+            <p>
+              Multiple payment options including credit cards, digital wallets,
+              and cash on delivery. All transactions are encrypted and secure.
+            </p>
+            <div class="feature-meta">
+              <span class="feature-tag">Secure</span>
+              <span class="feature-tag">Multiple Options</span>
+            </div>
+            <a href="#" class="feature-link">
+              Read More
+              <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="features-cta" data-aos="fade-up">
+          <div class="cta-content">
+            <h3>Ready to experience the difference?</h3>
+            <p>
+              Join thousands of satisfied customers who shop with us every day
+            </p>
+          </div>
+          <a href="#products" class="btn btn-primary"
+            >Shop Now <i class="fas fa-arrow-right"></i
+          ></a>
+        </div>
+      </section>
+      <section id="products" class="products">
+        <div class="section-heading">
+          <span class="subheading">What We Offer</span>
+          <h2>Our <span class="products-badge">Products</span></h2>
+          <p class="section-desc">
+            Discover our selection of fresh and organic products
+          </p>
+        </div>
+
+        <div class="filter-controls" data-aos="fade-up">
+          <button class="filter-btn active" data-filter="all">
+            All Products
+          </button>
+          <button class="filter-btn" data-filter="vegetables">
+            Vegetables
+          </button>
+          <button class="filter-btn" data-filter="fruits">Fruits</button>
+          <button class="filter-btn" data-filter="meat">Meat & Poultry</button>
+          <button class="filter-btn" data-filter="dairy">Dairy</button>
+        </div>
+
+        <div class="product-grid">
+          <div
+            class="product-card"
+            data-aos="fade-up"
+            data-category="vegetables"
+          >
+            <div class="product-badge">Sale -55%</div>
+            <div class="product-image">
+              <img
+                src="assets/onion.png"
+                alt="Fresh Onion"
+                loading="lazy"
+                width="200"
+                height="200"
+                decoding="async"
+              />
+              <div class="product-actions">
+                <button class="action-btn" aria-label="Add to wishlist">
+                  <i class="fas fa-heart"></i>
+                </button>
+                <button class="action-btn" aria-label="Quick view">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="action-btn" aria-label="Share">
+                  <i class="fas fa-share"></i>
+                </button>
+              </div>
+            </div>
+            <div class="product-content">
+              <span class="product-category">Vegetables</span>
+              <h3>Premium Red Onion</h3>
+              <div class="price">
+                <span class="current">$4.99</span>
+                <span class="original">$10.99</span>
+              </div>
+              <div class="rating" aria-label="4 out of 5 stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="far fa-star"></i>
+                <span>(4.0)</span>
+              </div>
+              <button class="cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Add To Cart</span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="product-card"
+            data-aos="fade-up"
+            data-aos-delay="100"
+            data-category="meat"
+          >
+            <div class="product-badge">Organic</div>
+            <div class="product-image">
+              <img
+                src="assets/meat.png"
+                alt="Fresh Meat"
+                loading="lazy"
+                width="200"
+                height="200"
+                decoding="async"
+              />
+              <div class="product-actions">
+                <button class="action-btn" aria-label="Add to wishlist">
+                  <i class="fas fa-heart"></i>
+                </button>
+                <button class="action-btn" aria-label="Quick view">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="action-btn" aria-label="Share">
+                  <i class="fas fa-share"></i>
+                </button>
+              </div>
+            </div>
+            <div class="product-content">
+              <span class="product-category">Meat</span>
+              <h3>Premium Beef Steak</h3>
+              <div class="price">
+                <span class="current">$14.99</span>
+                <span class="original">$19.99</span>
+              </div>
+              <div class="rating" aria-label="5 out of 5 stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <span>(5.0)</span>
+              </div>
+              <button class="cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Add To Cart</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card"
+            data-aos="fade-up"
+            data-aos-delay="150"
+            data-category="vegetables"
+          >
+            <div class="product-badge">Fresh</div>
+            <div class="product-image">
+              <img
+                src="assets/cabage.png"
+                alt="Fresh Cabbage"
+                loading="lazy"
+                width="200"
+                height="200"
+                decoding="async"
+              />
+              <div class="product-actions">
+                <button class="action-btn" aria-label="Add to wishlist">
+                  <i class="fas fa-heart"></i>
+                </button>
+                <button class="action-btn" aria-label="Quick view">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="action-btn" aria-label="Share">
+                  <i class="fas fa-share"></i>
+                </button>
+              </div>
+            </div>
+            <div class="product-content">
+              <span class="product-category">Vegetables</span>
+              <h3>Green Cabbage</h3>
+              <div class="price">
+                <span class="current">$3.49</span>
+                <span class="original">$5.99</span>
+              </div>
+              <div class="rating" aria-label="4.5 out of 5 stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <span>(4.5)</span>
+              </div>
+              <button class="cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Add To Cart</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card"
+            data-aos="fade-up"
+            data-aos-delay="200"
+            data-category="fruits"
+          >
+            <div class="product-badge">Bestseller</div>
+            <div class="product-image">
+              <img
+                src="assets/avocado.png"
+                alt="Fresh Avocado"
+                loading="lazy"
+                width="200"
+                height="200"
+                decoding="async"
+              />
+              <div class="product-actions">
+                <button class="action-btn" aria-label="Add to wishlist">
+                  <i class="fas fa-heart"></i>
+                </button>
+                <button class="action-btn" aria-label="Quick view">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="action-btn" aria-label="Share">
+                  <i class="fas fa-share"></i>
+                </button>
+              </div>
+            </div>
+            <div class="product-content">
+              <span class="product-category">Fruits</span>
+              <h3>Ripe Avocado</h3>
+              <div class="price">
+                <span class="current">$4.99</span>
+                <span class="original">$7.99</span>
+              </div>
+              <div class="rating" aria-label="4.8 out of 5 stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <span>(4.8)</span>
+              </div>
+              <button class="cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Add To Cart</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card"
+            data-aos="fade-up"
+            data-aos-delay="250"
+            data-category="vegetables"
+          >
+            <div class="product-badge">Organic</div>
+            <div class="product-image">
+              <img
+                src="assets/carrot.png"
+                alt="Fresh Carrot"
+                loading="lazy"
+                width="200"
+                height="200"
+                decoding="async"
+              />
+              <div class="product-actions">
+                <button class="action-btn" aria-label="Add to wishlist">
+                  <i class="fas fa-heart"></i>
+                </button>
+                <button class="action-btn" aria-label="Quick view">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="action-btn" aria-label="Share">
+                  <i class="fas fa-share"></i>
+                </button>
+              </div>
+            </div>
+            <div class="product-content">
+              <span class="product-category">Vegetables</span>
+              <h3>Organic Carrots</h3>
+              <div class="price">
+                <span class="current">$2.49</span>
+                <span class="original">$3.99</span>
+              </div>
+              <div class="rating" aria-label="4.2 out of 5 stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="far fa-star"></i>
+                <span>(4.2)</span>
+              </div>
+              <button class="cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Add To Cart</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card"
+            data-aos="fade-up"
+            data-aos-delay="300"
+            data-category="fruits"
+          >
+            <div class="product-badge">New</div>
+            <div class="product-image">
+              <img
+                src="assets/orange.png"
+                alt="Green Lemon"
+                loading="lazy"
+                width="200"
+                height="200"
+                decoding="async"
+              />
+              <div class="product-actions">
+                <button class="action-btn" aria-label="Add to wishlist">
+                  <i class="fas fa-heart"></i>
+                </button>
+                <button class="action-btn" aria-label="Quick view">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="action-btn" aria-label="Share">
+                  <i class="fas fa-share"></i>
+                </button>
+              </div>
+            </div>
+            <div class="product-content">
+              <span class="product-category">Fruits</span>
+              <h3>Green Lime</h3>
+              <div class="price">
+                <span class="current">$1.99</span>
+                <span class="original">$2.99</span>
+              </div>
+              <div class="rating" aria-label="4.7 out of 5 stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <span>(4.7)</span>
+              </div>
+              <button class="cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Add To Cart</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card"
+            data-aos="fade-up"
+            data-aos-delay="350"
+            data-category="dairy"
+          >
+            <div class="product-badge">Popular</div>
+            <div class="product-image">
+              <img
+                src="assets/potato.png"
+                alt="Fresh Potato"
+                loading="lazy"
+                width="200"
+                height="200"
+                decoding="async"
+              />
+              <div class="product-actions">
+                <button class="action-btn" aria-label="Add to wishlist">
+                  <i class="fas fa-heart"></i>
+                </button>
+                <button class="action-btn" aria-label="Quick view">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="action-btn" aria-label="Share">
+                  <i class="fas fa-share"></i>
+                </button>
+              </div>
+            </div>
+            <div class="product-content">
+              <span class="product-category">Vegetables</span>
+              <h3>Fresh Potatoes</h3>
+              <div class="price">
+                <span class="current">$3.49</span>
+                <span class="original">$5.49</span>
+              </div>
+              <div class="rating" aria-label="4.6 out of 5 stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <span>(4.6)</span>
+              </div>
+              <button class="cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Add To Cart</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="view-more-container" data-aos="fade-up">
+          <a href="#" class="btn btn-outline">View All Products</a>
+        </div>
+      </section>
+      <section id="reviews" class="reviews">
+        <div class="section-heading">
+          <span class="subheading">Testimonials</span>
+          <h2>Customer <span class="reviews-badge">Reviews</span></h2>
+          <p class="section-desc">What our happy customers say about us</p>
+        </div>
+
+        <div class="review-slider-controls">
+          <button class="slider-btn prev" aria-label="Previous review">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="slider-btn next" aria-label="Next review">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="review-grid">
+          <div class="review-card" data-aos="fade-up" data-aos-delay="0">
+            <div class="review-rating" aria-label="4.5 out of 5 stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+              <span>(4.5)</span>
+            </div>
+            <p>
+              "The quality of the organic vegetables is exceptional! Everything
+              arrives fresh and the taste is incomparable to supermarket
+              produce. The delivery is always on time and the staff is very
+              friendly."
+            </p>
+            <div class="reviewer">
+              <img
+                src="assets/pic-1.png"
+                alt="John Wilson"
+                loading="lazy"
+                width="60"
+                height="60"
+                decoding="async"
+              />
+              <div class="reviewer-info">
+                <h3>John Wilson</h3>
+                <span>Loyal Customer</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="review-rating" aria-label="5 out of 5 stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <span>(5.0)</span>
+            </div>
+            <p>
+              "I've been ordering from GUPTAGRO for over a year now and I'm
+              never disappointed. The selection is amazing and the convenience
+              of home delivery has made my life so much easier. Definitely
+              recommend!"
+            </p>
+            <div class="reviewer">
+              <img
+                src="assets/pic-2.png"
+                alt="Juliyana Smith"
+                loading="lazy"
+                width="60"
+                height="60"
+                decoding="async"
+              />
+              <div class="reviewer-info">
+                <h3>Juliyana Smith</h3>
+                <span>Verified Buyer</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="review-rating" aria-label="4.8 out of 5 stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <span>(4.8)</span>
+            </div>
+            <p>
+              "The service is impeccable and the products are always fresh. I
+              love their commitment to sustainable packaging and supporting
+              local farmers. It's more than just groceries - it's supporting a
+              better food system."
+            </p>
+            <div class="reviewer">
+              <img
+                src="assets/pic-3.png"
+                alt="Jonathan Parker"
+                loading="lazy"
+                width="60"
+                height="60"
+                decoding="async"
+              />
+              <div class="reviewer-info">
+                <h3>Jonathan Parker</h3>
+                <span>Monthly Subscriber</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-dots">
+          <span class="dot active"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </section>
+      <section id="blogs" class="blogs">
+        <div class="section-heading" data-aos="fade-up">
+          <span class="subheading">Latest Articles</span>
+          <h2>Our <span class="blogs-badge">Blogs</span></h2>
+          <p class="section-desc">
+            News, recipes and health tips from our experts
+          </p>
+        </div>
+
+        <div class="blogs-filter" data-aos="fade-up">
+          <button class="blog-filter-btn active" data-filter="all">
+            All Posts
+          </button>
+          <button class="blog-filter-btn" data-filter="nutrition">
+            Nutrition
+          </button>
+          <button class="blog-filter-btn" data-filter="recipes">Recipes</button>
+          <button class="blog-filter-btn" data-filter="sustainability">
+            Sustainability
+          </button>
+        </div>
+
+        <div class="blog-grid">
+          <div
+            class="blog-card"
+            data-aos="fade-up"
+            data-aos-delay="0"
+            data-category="nutrition"
+          >
+            <div class="blog-image">
+              <img
+                src="assets/blog-1.jpg"
+                alt="Organic Farming Benefits"
+                loading="lazy"
+                width="400"
+                height="250"
+                decoding="async"
+              />
+              <div class="blog-badge">
+                <span>Trending</span>
+              </div>
+              <div class="blog-category">Nutrition</div>
+            </div>
+            <div class="blog-content">
+              <div class="blog-date">
+                <span class="day">15</span>
+                <span class="month">Jun</span>
+              </div>
+              <div class="blog-info">
+                <span><i class="fas fa-user"></i> Sarah Johnson</span>
+                <span><i class="fas fa-comments"></i> 12</span>
+              </div>
+              <h3>10 Benefits of Eating Organic Vegetables and Fruits</h3>
+              <p>
+                Discover how organic produce can significantly improve your
+                health while supporting sustainable farming practices and
+                protecting our environment.
+              </p>
+              <div class="blog-footer">
+                <div class="blog-tags">
+                  <span class="blog-tag">Organic</span>
+                  <span class="blog-tag">Health</span>
+                </div>
+                <a href="#" class="blog-link">
+                  Read More
+                  <i class="fas fa-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="blog-card"
+            data-aos="fade-up"
+            data-aos-delay="100"
+            data-category="recipes"
+          >
+            <div class="blog-image">
+              <img
+                src="assets/blog-2.jpg"
+                alt="Cooking with Fresh Ingredients"
+                loading="lazy"
+                width="400"
+                height="250"
+                decoding="async"
+              />
+              <div class="blog-category">Recipes</div>
+            </div>
+            <div class="blog-content">
+              <div class="blog-date">
+                <span class="day">28</span>
+                <span class="month">May</span>
+              </div>
+              <div class="blog-info">
+                <span><i class="fas fa-user"></i> Chef Michael</span>
+                <span><i class="fas fa-comments"></i> 8</span>
+              </div>
+              <h3>5 Easy Summer Recipes Using Fresh Seasonal Produce</h3>
+              <p>
+                Delight your taste buds with these simple yet delicious recipes
+                that make the most of summer's bounty. Perfect for family
+                gatherings and picnics.
+              </p>
+              <div class="blog-footer">
+                <div class="blog-tags">
+                  <span class="blog-tag">Recipes</span>
+                  <span class="blog-tag">Summer</span>
+                </div>
+                <a href="#" class="blog-link">
+                  Read More
+                  <i class="fas fa-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="blog-card"
+            data-aos="fade-up"
+            data-aos-delay="200"
+            data-category="sustainability"
+          >
+            <div class="blog-image">
+              <img
+                src="assets/blog-3.jpg"
+                alt="Sustainable Farming"
+                loading="lazy"
+                width="400"
+                height="250"
+                decoding="async"
+              />
+              <div class="blog-badge">
+                <span>Featured</span>
+              </div>
+              <div class="blog-category">Sustainability</div>
+            </div>
+            <div class="blog-content">
+              <div class="blog-date">
+                <span class="day">10</span>
+                <span class="month">Apr</span>
+              </div>
+              <div class="blog-info">
+                <span><i class="fas fa-user"></i> Emma Green</span>
+                <span><i class="fas fa-comments"></i> 15</span>
+              </div>
+              <h3>How Our Organic Farm-to-Table Process Works</h3>
+              <p>
+                Take a journey through our sustainable supply chain and learn
+                how we ensure that only the freshest, most ethically sourced
+                products reach your table.
+              </p>
+              <div class="blog-footer">
+                <div class="blog-tags">
+                  <span class="blog-tag">Sustainability</span>
+                  <span class="blog-tag">Farming</span>
+                </div>
+                <a href="#" class="blog-link">
+                  Read More
+                  <i class="fas fa-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="blog-more" data-aos="fade-up">
+          <a href="#" class="btn btn-primary"
+            >View All Articles <i class="fas fa-long-arrow-alt-right"></i
+          ></a>
+          <div class="blog-newsletter">
+            <p>Subscribe to our newsletter for weekly updates</p>
+            <form class="newsletter-form">
+              <input type="email" placeholder="Enter your email" required />
+              <button type="submit">Subscribe</button>
+            </form>
+          </div>
+        </div>
+      </section>
+      <!-- Footer Section -->
+      <footer class="footer" id="footer">
+        <div class="footer-top">
+          <div class="container">
+            <div class="footer-content">
+              <div class="footer-box company-info">
+                <div class="footer-logo">
+                  <img
+                    src="assets/Capture.PNG"
+                    alt="GUPTAGRO Logo"
+                    width="150"
+                    height="45"
+                    loading="lazy"
+                  />
+                </div>
+                <p>
+                  GUPTAGRO delivers premium quality organic produce and
+                  groceries directly from local farms to your doorstep, ensuring
+                  freshness and sustainability with every purchase.
+                </p>
+                <div class="social-links">
+                  <a
+                    href="#"
+                    aria-label="Facebook"
+                    class="social-link facebook"
+                  >
+                    <i class="fab fa-facebook-f"></i>
+                  </a>
+                  <a href="#" aria-label="Twitter" class="social-link twitter">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                  <a
+                    href="#"
+                    aria-label="Instagram"
+                    class="social-link instagram"
+                  >
+                    <i class="fab fa-instagram"></i>
+                  </a>
+                  <a
+                    href="#"
+                    aria-label="LinkedIn"
+                    class="social-link linkedin"
+                  >
+                    <i class="fab fa-linkedin-in"></i>
+                  </a>
+                  <a
+                    href="#"
+                    aria-label="Pinterest"
+                    class="social-link pinterest"
+                  >
+                    <i class="fab fa-pinterest-p"></i>
+                  </a>
+                </div>
+              </div>
+
+              <div class="footer-box">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                  <li>
+                    <a href="#home"
+                      ><i class="fas fa-chevron-right"></i> Home</a
+                    >
+                  </li>
+                  <li>
+                    <a href="#about"
+                      ><i class="fas fa-chevron-right"></i> About Us</a
+                    >
+                  </li>
+                  <li>
+                    <a href="#products"
+                      ><i class="fas fa-chevron-right"></i> Products</a
+                    >
+                  </li>
+                  <li>
+                    <a href="#blogs"
+                      ><i class="fas fa-chevron-right"></i> Blogs</a
+                    >
+                  </li>
+                  <li>
+                    <a href="#contact"
+                      ><i class="fas fa-chevron-right"></i> Contact</a
+                    >
+                  </li>
+                </ul>
+              </div>
+
+              <div class="footer-box">
+                <h3>Customer Service</h3>
+                <ul class="footer-links">
+                  <li>
+                    <a href="#"
+                      ><i class="fas fa-chevron-right"></i> My Account</a
+                    >
+                  </li>
+                  <li>
+                    <a href="#"
+                      ><i class="fas fa-chevron-right"></i> Order Tracking</a
+                    >
+                  </li>
+                  <li>
+                    <a href="#"
+                      ><i class="fas fa-chevron-right"></i> Wishlist</a
+                    >
+                  </li>
+                  <li>
+                    <a href="#"><i class="fas fa-chevron-right"></i> FAQ</a>
+                  </li>
+                  <li>
+                    <a href="#"
+                      ><i class="fas fa-chevron-right"></i> Terms &
+                      Conditions</a
+                    >
+                  </li>
+                </ul>
+              </div>
+
+              <div class="footer-box contact-info">
+                <h3>Contact Info</h3>
+                <p>
+                  <i class="fas fa-map-marker-alt"></i> 1234 Grocery Street,
+                  Fresh City, FC 98765
+                </p>
+                <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                <p><i class="fas fa-envelope"></i> contact@guptagro.com</p>
+                <p><i class="fas fa-clock"></i> Mon - Fri: 8:00 AM - 8:00 PM</p>
+                <div class="payment-methods">
+                  <img
+                    src="assets/payment.png"
+                    alt="Payment Methods"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+
+              <div class="footer-box newsletter">
+                <h3>Newsletter</h3>
+                <p>
+                  Subscribe to receive updates, access to exclusive deals, and
+                  more.
+                </p>
+                <form class="newsletter-form" action="#" method="post">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Your Email Address"
+                    required
+                    aria-label="Email for newsletter"
+                  />
+                  <button type="submit" aria-label="Subscribe">
+                    <i class="fas fa-paper-plane"></i>
+                  </button>
+                </form>
+                <p class="newsletter-disclaimer">
+                  By subscribing, you agree to our Privacy Policy and consent to
+                  receive updates from our company.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div class="container">
+            <p>
+              &copy; 2023 <span>Gupta</span> - All Rights Reserved | Designed
+              with <i class="fas fa-heart"></i>
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <script src="https://unpkg.com/aos@next/dist/aos.js" defer></script>
+    <script>
+      // Search functionality
+      function openSearch() {
+        const searchOverlay = document.querySelector(".search-overlay");
+        if (searchOverlay) {
+          searchOverlay.classList.add("active");
+          const searchInput = document.getElementById("searchInput");
+          if (searchInput) {
+            searchInput.focus();
+          }
+        }
+      }
+
+      function initSearch() {
+        const searchOverlay = document.querySelector(".search-overlay");
+        const searchTrigger = document.getElementById("searchTrigger");
+        const closeSearch = document.querySelector(".close-search");
+
+        // Ensure the search overlay exists
+        if (!searchOverlay || !searchTrigger || !closeSearch) {
+          console.error("Search elements not found");
+          return;
+        }
+        const searchInput = document.getElementById("searchInput");
+        const clearSearch = document.querySelector(".clear-search");
+        const categoryFilter = document.getElementById("categoryFilter");
+        const sortFilter = document.getElementById("sortFilter");
+        const searchResults = document.querySelector(".search-results");
+        const noResults = document.querySelector(".search-no-results");
+        const clearFiltersBtn = document.querySelector(".clear-filters-btn");
+
+        // Product data (you can replace this with your actual product data)
+        const products = Array.from(
+          document.querySelectorAll(".product-card")
+        ).map((card) => ({
+          id: Math.random().toString(36).substr(2, 9),
+          name: card.querySelector("h3").textContent,
+          category: card.dataset.category,
+          price: parseFloat(
+            card.querySelector(".current").textContent.replace("$", "")
+          ),
+          image: card.querySelector("img").src,
+        }));
+
+        // Open search overlay
+        searchTrigger.addEventListener("click", () => {
+          searchOverlay.classList.add("active");
+          searchInput.focus();
+        });
+
+        // Close search overlay
+        closeSearch.addEventListener("click", () => {
+          searchOverlay.classList.remove("active");
+        });
+
+        // Close on escape key
+        document.addEventListener("keydown", (e) => {
+          if (
+            e.key === "Escape" &&
+            searchOverlay.classList.contains("active")
+          ) {
+            searchOverlay.classList.remove("active");
+          }
+        });
+
+        // Handle search input
+        searchInput.addEventListener("input", () => {
+          const searchTerm = searchInput.value.trim();
+          clearSearch.classList.toggle("visible", searchTerm.length > 0);
+          performSearch();
+        });
+
+        // Clear search
+        clearSearch.addEventListener("click", () => {
+          searchInput.value = "";
+          clearSearch.classList.remove("visible");
+          performSearch();
+        });
+
+        // Handle filters
+        categoryFilter.addEventListener("change", performSearch);
+        sortFilter.addEventListener("change", performSearch);
+
+        // Clear all filters
+        clearFiltersBtn.addEventListener("click", () => {
+          searchInput.value = "";
+          categoryFilter.value = "";
+          sortFilter.value = "relevance";
+          clearSearch.classList.remove("visible");
+          performSearch();
+        });
+
+        function performSearch() {
+          const searchTerm = searchInput.value.toLowerCase();
+          const category = categoryFilter.value;
+          const sortBy = sortFilter.value;
+
+          let results = products.filter((product) => {
+            const matchesSearch = product.name
+              .toLowerCase()
+              .includes(searchTerm);
+            const matchesCategory = !category || product.category === category;
+            return matchesSearch && matchesCategory;
+          });
+
+          // Sort results
+          switch (sortBy) {
+            case "price-low":
+              results.sort((a, b) => a.price - b.price);
+              break;
+            case "price-high":
+              results.sort((a, b) => b.price - a.price);
+              break;
+            case "name":
+              results.sort((a, b) => a.name.localeCompare(b.name));
+              break;
+          }
+
+          // Display results
+          if (results.length === 0) {
+            searchResults.style.display = "none";
+            noResults.style.display = "block";
+          } else {
+            searchResults.style.display = "block";
+            noResults.style.display = "none";
+            searchResults.innerHTML = results
+              .map(
+                (product) => `
+              <div class="search-result-item" data-id="${product.id}">
+                <div class="result-image">
+                  <img src="${product.image}" alt="${product.name}">
+                </div>
+                <div class="result-content">
+                  <div class="result-title">${product.name}</div>
+                  <div class="result-category">${product.category}</div>
+                  <div class="result-price">$${product.price.toFixed(2)}</div>
+                </div>
+              </div>
+            `
+              )
+              .join("");
+
+            // Add click handlers to results
+            document.querySelectorAll(".search-result-item").forEach((item) => {
+              item.addEventListener("click", () => {
+                const productId = item.dataset.id;
+                const product = products.find((p) => p.id === productId);
+                // Handle product click (e.g., scroll to product or show details)
+                searchOverlay.classList.remove("active");
+              });
+            });
+          }
+        }
+      }
+
+      // Wait for DOM to be fully loaded before initializing
+      document.addEventListener("DOMContentLoaded", () => {
+        // Initialize AOS with optimized settings
+        setTimeout(() => {
+          AOS.init({
+            duration: 700,
+            offset: 80,
+            once: true,
+            delay: 0,
+            anchorPlacement: "top-bottom",
+            throttleDelay: 50,
+            easing: "ease-out-cubic",
+            disable: "mobile",
+          });
+        }, 100);
+
+        // Initialize search functionality
+        initSearch();
+
+        // Ensure the search button works even if initialization fails
+        const searchTrigger = document.getElementById("searchTrigger");
+        if (searchTrigger) {
+          searchTrigger.addEventListener("click", openSearch);
+        }
+
+        // Initialize all interactive elements
+        initScrollProgress();
+        initNavigation();
+        initProductFilter();
+        initReviewSlider();
+        setupSmoothScroll();
+        setupLazyLoading();
+        addHoverEffects();
+        setupCartFunctionality();
+        initBlogFilter();
+        setupNewsletterForm();
+      });
+
+      // Loading animation - separate for better performance
+      window.addEventListener("load", () => {
+        const loader = document.querySelector(".loading");
+        if (!loader) return;
+
+        setTimeout(() => {
+          loader.style.opacity = "0";
+          setTimeout(() => {
+            loader.style.display = "none";
+          }, 300);
+        }, 500);
+      });
+
+      // Scroll progress bar with debounce
+      function initScrollProgress() {
+        const scrollProgress = document.querySelector(".scroll-progress");
+        if (!scrollProgress) return;
+
+        let scrollTimeout;
+
+        window.addEventListener("scroll", () => {
+          if (scrollTimeout) {
+            window.cancelAnimationFrame(scrollTimeout);
+          }
+
+          scrollTimeout = window.requestAnimationFrame(() => {
+            const scrollable =
+              document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = window.scrollY;
+            const progress = `${(scrolled / scrollable) * 100}%`;
+            scrollProgress.style.width = progress;
+          });
+        });
+      }
+
+      // Navigation functionality
+      function initNavigation() {
+        const navbar = document.querySelector(".navbar");
+        const menuBtn = document.querySelector(".menu-btn");
+        const menuItems = document.querySelector(".menuitems");
+
+        if (!navbar || !menuBtn || !menuItems) return;
+
+        // Navbar scroll effect with debounce
+        let navbarTimeout;
+        window.addEventListener("scroll", () => {
+          if (navbarTimeout) {
+            window.cancelAnimationFrame(navbarTimeout);
+          }
+
+          navbarTimeout = window.requestAnimationFrame(() => {
+            if (window.scrollY > 80) {
+              navbar.classList.add("scrolled");
+            } else {
+              navbar.classList.remove("scrolled");
+            }
+          });
+        });
+
+        // Mobile menu toggle
+        menuBtn.addEventListener("click", () => {
+          menuBtn.classList.toggle("active");
+          menuItems.classList.toggle("active");
+          // Prevent scrolling when menu is open
+          document.body.classList.toggle("menu-open");
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener("click", (e) => {
+          if (
+            !menuItems.contains(e.target) &&
+            !menuBtn.contains(e.target) &&
+            menuItems.classList.contains("active")
+          ) {
+            menuBtn.classList.remove("active");
+            menuItems.classList.remove("active");
+            document.body.classList.remove("menu-open");
+          }
+        });
+
+        // Close menu when clicking a menu item
+        menuItems.querySelectorAll("a").forEach((item) => {
+          item.addEventListener("click", () => {
+            menuBtn.classList.remove("active");
+            menuItems.classList.remove("active");
+            document.body.classList.remove("menu-open");
+          });
+        });
+
+        // Highlight active menu item based on scroll position
+        highlightActiveMenuItem();
+      }
+
+      // Highlight active menu item based on scroll
+      function highlightActiveMenuItem() {
+        const sections = document.querySelectorAll("section[id]");
+        const navItems = document.querySelectorAll(".menuitems a");
+
+        if (!sections.length || !navItems.length) return;
+
+        let scrollTimeout;
+        window.addEventListener("scroll", () => {
+          if (scrollTimeout) {
+            window.cancelAnimationFrame(scrollTimeout);
+          }
+
+          scrollTimeout = window.requestAnimationFrame(() => {
+            let current = "";
+            sections.forEach((section) => {
+              const sectionTop = section.offsetTop - 150;
+              if (window.scrollY >= sectionTop) {
+                current = section.getAttribute("id");
+              }
+            });
+
+            navItems.forEach((item) => {
+              item.classList.remove("active");
+              const href = item.getAttribute("href");
+              if (href && href === `#${current}`) {
+                item.classList.add("active");
+              }
+            });
+          });
+        });
+      }
+
+      // Product filtering functionality with optimized event handling
+      function initProductFilter() {
+        const filterBtns = document.querySelectorAll(".filter-btn");
+        const productCards = document.querySelectorAll(".product-card");
+
+        if (!filterBtns.length || !productCards.length) return;
+
+        filterBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            // Remove active class from all buttons
+            filterBtns.forEach((b) => b.classList.remove("active"));
+            // Add active class to clicked button
+            btn.classList.add("active");
+
+            const filterValue = btn.getAttribute("data-filter");
+
+            // Use requestAnimationFrame for better performance
+            requestAnimationFrame(() => {
+              productCards.forEach((card) => {
+                // Show all if filter is 'all', otherwise check category
+                if (
+                  filterValue === "all" ||
+                  card.getAttribute("data-category") === filterValue
+                ) {
+                  card.style.display = "flex";
+                  setTimeout(() => {
+                    card.style.opacity = "1";
+                    card.style.transform = "translateY(0)";
+                  }, 10);
+                } else {
+                  card.style.opacity = "0";
+                  card.style.transform = "translateY(20px)";
+                  setTimeout(() => {
+                    card.style.display = "none";
+                  }, 300);
+                }
+              });
+            });
+          });
+        });
+      }
+
+      // Simplified review slider functionality
+      function initReviewSlider() {
+        const dots = document.querySelectorAll(".review-dots .dot");
+        if (!dots.length) return;
+
+        dots.forEach((dot, index) => {
+          dot.addEventListener("click", () => {
+            document
+              .querySelectorAll(".dot")
+              .forEach((d) => d.classList.remove("active"));
+            dot.classList.add("active");
+          });
+        });
+      }
+
+      // Smooth scroll for anchor links
+      function setupSmoothScroll() {
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute("href");
+            if (targetId === "#") return;
+
+            const target = document.querySelector(targetId);
+            if (target) {
+              target.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+                inline: "nearest",
+              });
+            }
+          });
+        });
+      }
+
+      // Optimize image loading
+      function setupLazyLoading() {
+        // Use native lazy loading for images
+        document.querySelectorAll("img").forEach((img) => {
+          if (
+            !img.hasAttribute("loading") &&
+            !img.hasAttribute("fetchpriority")
+          ) {
+            img.setAttribute("loading", "lazy");
+            img.setAttribute("decoding", "async");
+          }
+        });
+
+        // Use Intersection Observer for non-image elements
+        if ("IntersectionObserver" in window) {
+          const lazyloadOptions = {
+            root: null,
+            rootMargin: "100px",
+            threshold: 0.1,
+          };
+
+          const lazyloadObserver = new IntersectionObserver(
+            (entries, observer) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  const element = entry.target;
+                  element.classList.add("in-view");
+                  observer.unobserve(element);
+                }
+              });
+            },
+            lazyloadOptions
+          );
+
+          document
+            .querySelectorAll(
+              ".feature-box, .product-card, .review-card, .blog-card"
+            )
+            .forEach((element) => {
+              lazyloadObserver.observe(element);
+            });
+        }
+      }
+
+      // Add animation effects
+      function addHoverEffects() {
+        document
+          .querySelectorAll(
+            ".feature-box, .product-card, .review-card, .blog-card"
+          )
+          .forEach((element) => {
+            element.classList.add("hover-float");
+          });
+      }
+
+      // Shopping cart functionality
+      function setupCartFunctionality() {
+        const cartBtns = document.querySelectorAll(".cart-btn");
+        const cartCount = document.querySelector(".cart-count");
+        const cartOverlay = document.querySelector(".cart-overlay");
+        const closeCartBtn = document.querySelector(".close-cart");
+        const cartItems = document.querySelector(".cart-items");
+        const totalAmount = document.querySelector(".total-amount");
+        const clearCartBtn = document.querySelector(".clear-cart-btn");
+        const checkoutBtn = document.querySelector(".checkout-btn");
+
+        if (!cartBtns.length || !cartCount || !cartOverlay) return;
+
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        updateCartUI();
+
+        // Open cart
+        document
+          .querySelector(".icon-btn[aria-label='Shopping cart']")
+          .addEventListener("click", () => {
+            cartOverlay.classList.add("active");
+            document.body.style.overflow = "hidden";
+          });
+
+        // Close cart
+        closeCartBtn.addEventListener("click", () => {
+          cartOverlay.classList.remove("active");
+          document.body.style.overflow = "";
+        });
+
+        // Add to cart
+        cartBtns.forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const productCard = e.target.closest(".product-card");
+            const product = {
+              id: Date.now(),
+              name: productCard.querySelector("h3").textContent,
+              price: parseFloat(
+                productCard
+                  .querySelector(".current")
+                  .textContent.replace("$", "")
+              ),
+              image: productCard.querySelector("img").src,
+              quantity: 1,
+            };
+
+            addToCart(product);
+            updateCartUI();
+            showAddedToCartFeedback(btn);
+          });
+        });
+
+        // Clear cart
+        clearCartBtn.addEventListener("click", () => {
+          cart = [];
+          localStorage.setItem("cart", JSON.stringify(cart));
+          updateCartUI();
+        });
+
+        // Checkout
+        checkoutBtn.addEventListener("click", () => {
+          if (cart.length === 0) {
+            alert("Your cart is empty!");
+            return;
+          }
+          alert("Thank you for your purchase! This is a demo website.");
+          cart = [];
+          localStorage.setItem("cart", JSON.stringify(cart));
+          updateCartUI();
+          cartOverlay.classList.remove("active");
+        });
+
+        function addToCart(product) {
+          const existingProduct = cart.find(
+            (item) => item.name === product.name
+          );
+
+          if (existingProduct) {
+            existingProduct.quantity++;
+          } else {
+            cart.push(product);
+          }
+
+          localStorage.setItem("cart", JSON.stringify(cart));
+        }
+
+        function updateCartUI() {
+          // Update cart count
+          const totalItems = cart.reduce(
+            (total, item) => total + item.quantity,
+            0
+          );
+          cartCount.textContent = totalItems;
+
+          // Update cart items
+          cartItems.innerHTML = cart
+            .map(
+              (item) => `
+            <div class="cart-item" data-id="${item.id}">
+              <img src="${item.image}" alt="${item.name}">
+              <div class="cart-item-content">
+                <h3 class="cart-item-title">${item.name}</h3>
+                <div class="cart-item-price">$${(
+                  item.price * item.quantity
+                ).toFixed(2)}</div>
+                <div class="cart-item-quantity">
+                  <button class="quantity-btn minus" onclick="updateQuantity(${
+                    item.id
+                  }, -1)">-</button>
+                  <span>${item.quantity}</span>
+                  <button class="quantity-btn plus" onclick="updateQuantity(${
+                    item.id
+                  }, 1)">+</button>
+                </div>
+              </div>
+              <button class="cart-item-remove" onclick="removeFromCart(${
+                item.id
+              })">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          `
+            )
+            .join("");
+
+          // Update total
+          const total = cart.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+          );
+          totalAmount.textContent = `$${total.toFixed(2)}`;
+        }
+
+        function showAddedToCartFeedback(btn) {
+          const originalText = btn.innerHTML;
+          btn.innerHTML = '<i class="fas fa-check"></i> Added!';
+          btn.classList.add("added");
+
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove("added");
+          }, 2000);
+
+          cartCount.classList.add("pulse");
+          setTimeout(() => cartCount.classList.remove("pulse"), 300);
+        }
+
+        // Make these functions available globally
+        window.updateQuantity = function (id, change) {
+          const item = cart.find((item) => item.id === id);
+          if (item) {
+            item.quantity = Math.max(1, item.quantity + change);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            updateCartUI();
+          }
+        };
+
+        window.removeFromCart = function (id) {
+          cart = cart.filter((item) => item.id !== id);
+          localStorage.setItem("cart", JSON.stringify(cart));
+          updateCartUI();
+        };
+      }
+
+      // Initialize blog category filter
+      function initBlogFilter() {
+        const filterBtns = document.querySelectorAll(".blog-filter-btn");
+        const blogCards = document.querySelectorAll(".blog-card");
+
+        if (!filterBtns.length || !blogCards.length) return;
+
+        filterBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            // Remove active class from all buttons
+            filterBtns.forEach((b) => b.classList.remove("active"));
+
+            // Add active class to clicked button
+            btn.classList.add("active");
+
+            // Get filter value
+            const filterValue = btn.getAttribute("data-filter");
+
+            // Use requestAnimationFrame for better performance
+            requestAnimationFrame(() => {
+              blogCards.forEach((card) => {
+                if (
+                  filterValue === "all" ||
+                  card.getAttribute("data-category") === filterValue
+                ) {
+                  card.style.display = "flex";
+                  setTimeout(() => {
+                    card.style.opacity = "1";
+                    card.style.transform = "translateY(0)";
+                  }, 10);
+                } else {
+                  card.style.opacity = "0";
+                  card.style.transform = "translateY(20px)";
+                  setTimeout(() => {
+                    card.style.display = "none";
+                  }, 300);
+                }
+              });
+            });
+          });
+        });
+      }
+
+      // Handle newsletter form submission
+      function setupNewsletterForm() {
+        const newsletterForm = document.querySelector(".newsletter-form");
+        if (!newsletterForm) return;
+
+        newsletterForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          const emailInput = this.querySelector('input[type="email"]');
+          if (!emailInput || !emailInput.value.trim()) return;
+
+          // Simple form handling
+          emailInput.value = "";
+          alert("Thank you for subscribing!");
+        });
+      }
+    </script>
+  </body>
+</html>
